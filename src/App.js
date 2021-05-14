@@ -26,8 +26,29 @@ function App() {
         <li>Data</li>
       </ul>
 
-      TK
-      <Button intent="success" text="button content" onClick={() => { console.log('wat')}} />
+      <div className="Toolbox">
+        <div className="IdentityBrowser">
+          Identity Browser
+        </div>
+        <div className="KnowledgeBase">
+          Knowledge Base
+        </div>
+        <div className="InferenceEngine">
+          Inference Engine
+        </div>
+        <div className="ProcessSelector">
+          Process Selector
+        </div>
+      </div>
+
+      <div className="Output">
+        Output
+      </div>
+
+      <div className="Visualizer">
+        Visualizer
+        <Button intent="success" text="button content" onClick={() => { console.log('wat')}} />
+      </div>
     </div>
   );
 }

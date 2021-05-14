@@ -1,25 +1,43 @@
 .App {
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+.Toolbox {
+  display: flex;
+  flex-direction: row;
+
+  flex-grow: 1;
 }
 
-a {
-  color: white;
-  text-decoration: none;
+.IdentityBrowser {
+  flex-grow: 3;
+  background: red;
 }
 
-a:hover {
-  color: white;
+.KnowledgeBase {
+  flex-grow: 1;
+  background: blue;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
-  background: #32454D;
-  color: white;
-  overflow: hidden;
+.InferenceEngine {
+  flex-grow: 1;
+  background: yellow;
+}
+
+.ProcessSelector {
+  flex-grow: 1;
+  background: green;
+}
+
+.Output {
+  flex-grow: 0.5;
+  background: orange;
+}
+
+.Visualizer {
+  flex-grow: 3;
+  background: purple;
+  margin-bottom: 1em;
 }
