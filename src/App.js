@@ -13,6 +13,7 @@ function App() {
         <li className="active">
           <a href='#'>
             Online
+            &nbsp;
             <span className="blink green-text">&#9679;</span>
           </a>
         </li>
@@ -27,17 +28,54 @@ function App() {
       </ul>
 
       <div className="Toolbox">
-        <div className="IdentityBrowser">
-          Identity Browser
+        <div className="IdentityBrowser bordered-section marginalized">
+          <div className="section-title">
+            Identity selector
+          </div>
+          <img src="https://i.imgur.com/Fv6NiyJ.png" className="avatar" />
+          <div>
+            <label for="medium">Medium:</label>
+
+            <select name="medium" id="medium">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label for="channel">Channel:</label>
+
+            <select name="channel" id="channel">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label for="identity">Identity:</label>
+
+            <select name="identity" id="identity">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+
         </div>
-        <div className="KnowledgeBase">
-          Knowledge Base
+        <div className="KnowledgeBase bordered-section marginalized">
+            <div className="section-title">Knowledge base</div>
+            generated reading level, comparisons, etc (dactyl)
         </div>
-        <div className="InferenceEngine">
-          Inference Engine
+        <div className="InferenceEngine bordered-section marginalized">
+          <div class="section-title">Inference engine</div>
+          Chain length
         </div>
-        <div className="ProcessSelector">
-          Process Selector
+        <div className="ProcessSelector bordered-section marginalized">
+          <div class="section-title">Process selecter</div>
+          markov chains, retorts, continuations
         </div>
       </div>
 
