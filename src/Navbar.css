@@ -1,0 +1,44 @@
+.Navbar {
+  color: white;
+  margin: 1em;
+  margin-left: 0.5em;
+  margin-bottom: 2em;
+  padding: 0;
+}
+
+.Navbar li {
+  display: inline;
+  border: 1px solid white;
+  vertical-align: top;
+  padding: 0.2em 0.4em;
+
+  text-transform: uppercase;
+  border-top-left-radius: 0.2em;
+  border-bottom-right-radius: 0.5em;
+
+  filter: drop-shadow(10px 5px 4px #4444dd);
+}
+
+.Navbar li.brand-name {
+  font-size: 1.5em;
+  border-right: 5px dashed #70A0AD;
+  margin-right: 0.3em;
+  padding-right: 2.3em;
+  padding-left: 0.7em;
+
+  filter: drop-shadow(10px 5px 4px #4444dd);
+}
+
+.Navbar li.brand-name:hover {
+  filter: drop-shadow(20px 15px 10px #4444dd);
+  background: #0e9ea3;
+
+  border: 1px solid #23FFFF;
+  border-right: 5px dashed #23FFFF;
+}
+
+.Navbar li.active, .Navbar li:not(.brand-name):hover {
+  background: #0c5255;
+  color: #23FFFF;
+  border: 1px solid #23FFFF;
+}
