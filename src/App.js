@@ -8,7 +8,11 @@ import { MenuItem, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { Tag } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 
+// var RETORT_URL = 'https://retort-v2.herokuapp.com';
+var RETORT_URL = 'http://localhost:3000';
+
 class App extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -16,9 +20,30 @@ class App extends React.Component {
       loading_identity_selector: false,
       loading_knowledge_base:    false,
       loading_inference_engine:  false,
-      loading_process_selector:  false
+      loading_process_selector:  false,
+
+      active_medium_list: []
     }
     console.log('loading');
+  }
+
+  componentDidMount() {
+    this.load_mediums();
+  }
+
+  load_mediums() {
+    this.setState({ loading_identity_selector: true });
+
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(RETORT_URL + '/identities/mediums', requestOptions)
+        .then(response => response.json())
+        .then(list => this.setState({ 
+          active_medium_list:        list,
+          loading_identity_selector: false
+        }));
   }
 
   render() {
@@ -54,7 +79,7 @@ class App extends React.Component {
             <img src="https://i.imgur.com/Fv6NiyJ.png" className="avatar" />
             <div>
               <label for="medium">Medium:</label>
-              <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
+              <MultiSelect items={this.state.active_medium_list}
                 placeholder="Medium"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
