@@ -3,7 +3,9 @@ import './Theme.css';
 import './App.css';
 import './Navbar.css';
 
-import { ProgressBar } from "@blueprintjs/core";
+import { MenuItem, Spinner, SpinnerSize } from "@blueprintjs/core";
+import { Tag } from '@blueprintjs/core';
+import { MultiSelect } from '@blueprintjs/select';
 
 function App() {
   return (
@@ -31,50 +33,82 @@ function App() {
         <div className="IdentityBrowser bordered-section marginalized">
           <div className="section-title">
             Identity selector
+            <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
           </div>
           <img src="https://i.imgur.com/Fv6NiyJ.png" className="avatar" />
           <div>
             <label for="medium">Medium:</label>
-
-            <select name="medium" id="medium">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select>
+            <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
+              placeholder="Medium"
+              itemRenderer={(item, { modifiers, handleClick }) =>
+                <MenuItem
+                  key={item}
+                  text={item}
+                  onClick={handleClick}
+                  active={modifiers.active}
+                />
+              }
+              onItemSelect={(item) => { console.log('selected item ' + item) }}
+              tagRenderer={item => item}
+            />
           </div>
           <div>
             <label for="channel">Channel:</label>
-
-            <select name="channel" id="channel">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select>
+            <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
+              placeholder="Channel"
+              itemRenderer={(item, { modifiers, handleClick }) =>
+                <MenuItem
+                  key={item}
+                  text={item}
+                  onClick={handleClick}
+                  active={modifiers.active}
+                />
+              }
+              onItemSelect={(item) => { console.log('selected item ' + item) }}
+              tagRenderer={item => item}
+            />
           </div>
           <div>
             <label for="identity">Identity:</label>
-
-            <select name="identity" id="identity">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select>
+            <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
+              placeholder="Identity"
+              itemRenderer={(item, { modifiers, handleClick }) =>
+                <MenuItem
+                  key={item}
+                  text={item}
+                  onClick={handleClick}
+                  active={modifiers.active}
+                />
+              }
+              onItemSelect={(item) => { console.log('selected item ' + item) }}
+              tagRenderer={item => item}
+            />
           </div>
-
         </div>
         <div className="KnowledgeBase bordered-section marginalized">
-            <div className="section-title">Knowledge base</div>
-            generated reading level, comparisons, etc (dactyl)
+            <div className="section-title">
+              Knowledge base
+              <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
+            </div>
+            <div>
+              generated reading level, comparisons, etc (dactyl)
+            </div>
+            <Tag fill={false} intent="warning" interactive={false} icon="user" rightIcon="dashboard" onClick={() => { console.log('clicked this tag') }}>
+              Test
+            </Tag>
         </div>
         <div className="InferenceEngine bordered-section marginalized">
-          <div class="section-title">Inference engine</div>
+          <div className="section-title">
+            Inference engine
+            <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
+          </div>
           Chain length
         </div>
         <div className="ProcessSelector bordered-section marginalized">
-          <div class="section-title">Process selecter</div>
+          <div className="section-title">
+            Process selecter
+            <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
+          </div>
           markov chains, retorts, continuations
         </div>
       </div>
@@ -84,24 +118,24 @@ function App() {
       </div>
 
       <div className="Visualizer muted-section padded-section marginalized">
-        <div class="muted-section-title">
+        <div className="muted-section-title">
           Visualizer &#8674; Medium &#8674; Channel / Identity
         </div>
-        <div class="DialogueTreeVisualizer">
-          <ul class="WordList">
+        <div className="DialogueTreeVisualizer">
+          <ul className="WordList">
             <li>There</li>
             <li>The</li>
             <li>In</li>
-            <li class="selected">Once</li>
+            <li className="selected">Once</li>
             <li>It</li>
             <li>When</li>
             <li>While</li>
           </ul>
-          <ul class="WordList">
+          <ul className="WordList">
             <li>There</li>
             <li>The</li>
             <li>In</li>
-            <li class="selected">Once</li>
+            <li className="selected">Once</li>
             <li>It</li>
             <li>When</li>
             <li>While</li>

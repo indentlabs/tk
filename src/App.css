@@ -89,4 +89,5 @@
 .WordList li:hover {
   background: #23FFFF;
   color: black;
+  filter: drop-shadow(10px 5px 4px #4444dd);
 }
