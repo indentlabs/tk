@@ -147,7 +147,7 @@ class App extends React.Component {
                 <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
               )}
             </div>
-            Chain length
+            Chain length, style filter, autopunct, etc
           </div>
           <div className="ProcessSelector bordered-section marginalized">
             <div className="section-title">
@@ -179,13 +179,29 @@ class App extends React.Component {
               <li>While</li>
             </ul>
             <ul className="WordList">
-              <li>There</li>
-              <li>The</li>
-              <li>In</li>
-              <li className="selected">Once</li>
+              <li>there</li>
+              <li>he</li>
+              <li className="selected">upon</li>
               <li>It</li>
               <li>When</li>
               <li>While</li>
+            </ul>
+            <ul className="WordList">
+              <li>there</li>
+              <li>he</li>
+              <li>When</li>
+              <li>While</li>
+              <li className="selected">a</li>
+              <li>It</li>
+            </ul>
+            <ul className="WordList">
+              <li>time</li>
+              <li>midnight</li>
+              <li>dreary</li>
+              <li>late</li>
+              <li>monday</li>
+              <li>wednesday</li>
+              <li>friday</li>
             </ul>
           </div>
         </div>
