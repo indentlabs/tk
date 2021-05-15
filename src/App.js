@@ -79,11 +79,11 @@ function App() {
         </div>
       </div>
 
-      <div className="Output">
+      <div className="Output highlighted-section padded-section marginalized">
         Output
       </div>
 
-      <div className="Visualizer">
+      <div className="Visualizer muted-section padded-section marginalized">
         Visualizer
         <Button intent="success" text="button content" onClick={() => { console.log('wat')}} />
       </div>
