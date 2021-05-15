@@ -3,7 +3,7 @@ import './Theme.css';
 import './App.css';
 import './Navbar.css';
 
-import { Button } from "@blueprintjs/core";
+import { ProgressBar } from "@blueprintjs/core";
 
 function App() {
   return (
@@ -84,7 +84,9 @@ function App() {
       </div>
 
       <div className="Visualizer muted-section padded-section marginalized">
-        <div class="muted-section-title">Visualizer</div>
+        <div class="muted-section-title">
+          Visualizer &#8674; Medium &#8674; Channel / Identity
+        </div>
         <div class="DialogueTreeVisualizer">
           <ul class="WordList">
             <li>There</li>
