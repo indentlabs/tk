@@ -42,6 +42,12 @@ html, body {
 }
 */
 
+.muted-section-title {
+  color: #adc6cf;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+}
+
 .padded-section {
   padding: 1em;
 }

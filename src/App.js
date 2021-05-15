@@ -84,8 +84,27 @@ function App() {
       </div>
 
       <div className="Visualizer muted-section padded-section marginalized">
-        Visualizer
-        <Button intent="success" text="button content" onClick={() => { console.log('wat')}} />
+        <div class="muted-section-title">Visualizer</div>
+        <div class="DialogueTreeVisualizer">
+          <ul class="WordList">
+            <li>There</li>
+            <li>The</li>
+            <li>In</li>
+            <li class="selected">Once</li>
+            <li>It</li>
+            <li>When</li>
+            <li>While</li>
+          </ul>
+          <ul class="WordList">
+            <li>There</li>
+            <li>The</li>
+            <li>In</li>
+            <li class="selected">Once</li>
+            <li>It</li>
+            <li>When</li>
+            <li>While</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

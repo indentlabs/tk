@@ -43,6 +43,50 @@
 }
 
 .Visualizer {
+  display: flex;
+  flex-direction: column;
+
   flex-grow: 3;
   margin-bottom: 0.1em;
+}
+
+.DialogueTreeVisualizer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.WordList {
+  display: inline-block;
+  list-style: none;
+  margin-right: 2em;
+  min-width: 100px;
+}
+
+.WordList li {
+  display: block;
+  border: 1px solid white;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0.5em 0;
+  padding: 0.25em 0;
+  background: #20303A;
+}
+
+.WordList li.selected {
+  color: #23FFFF;
+  font-size: 1.5em;
+  text-transform: lowercase;
+  padding: 2em 0;
+  background: #32454D;
+  border-bottom-right-radius: 1em;
+  border-top-left-radius: 0.5em;
+}
+
+.WordList li:hover {
+  background: #23FFFF;
+  color: black;
 }
