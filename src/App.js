@@ -22,7 +22,13 @@ class App extends React.Component {
       loading_inference_engine:  false,
       loading_process_selector:  false,
 
-      active_medium_list: []
+      active_mediums_list:     [],
+      active_channels_list:    [],
+      active_identifiers_list: [],
+
+      selected_medium:     "",
+      selected_channel:    "",
+      selected_identifier: ""
     }
     console.log('loading');
   }
@@ -35,15 +41,51 @@ class App extends React.Component {
     this.setState({ loading_identity_selector: true });
 
     const requestOptions = {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     };
     fetch(RETORT_URL + '/identities/mediums', requestOptions)
-        .then(response => response.json())
-        .then(list => this.setState({ 
-          active_medium_list:        list,
-          loading_identity_selector: false
-        }));
+      .then(response => response.json())
+      .then((list) => this.setState({ 
+        active_mediums_list:        list,
+        loading_identity_selector: false
+      }));
+  }
+
+  load_channels(medium) {
+    this.setState({ loading_identity_selector: true });
+
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(
+      RETORT_URL + '/identities/channels?medium=' + medium, 
+      requestOptions
+    )
+      .then(response => response.json())
+      .then((list) => this.setState({ 
+        active_channels_list:      list,
+        loading_identity_selector: false
+      }));
+  }
+
+  load_identities(medium) {
+    this.setState({ loading_identity_selector: true });
+
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(
+      RETORT_URL + '/identities/identifiers?medium=' + medium, 
+      requestOptions
+    )
+      .then(response => response.json())
+      .then((list) => this.setState({ 
+        active_identifiers_list:   list,
+        loading_identity_selector: false
+      }));
   }
 
   render() {
@@ -79,8 +121,9 @@ class App extends React.Component {
             <img src="https://i.imgur.com/Fv6NiyJ.png" className="avatar" />
             <div>
               <label for="medium">Medium:</label>
-              <MultiSelect items={this.state.active_medium_list}
-                placeholder="Medium"
+              <MultiSelect
+                items={this.state.active_mediums_list}
+                placeholder="Choose"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -89,14 +132,19 @@ class App extends React.Component {
                     active={modifiers.active}
                   />
                 }
-                onItemSelect={(item) => { console.log('selected item ' + item) }}
+                onItemSelect={(medium) => {
+                  this.setState({ selected_medium: medium });
+                  this.load_channels(medium);
+                  this.load_identities(medium);
+                }}
                 tagRenderer={item => item}
               />
+              <span>{ this.state.selected_medium }</span>
             </div>
             <div>
               <label for="channel">Channel:</label>
-              <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
-                placeholder="Channel"
+              <MultiSelect items={this.state.active_channels_list}
+                placeholder="Choose"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -105,14 +153,17 @@ class App extends React.Component {
                     active={modifiers.active}
                   />
                 }
-                onItemSelect={(item) => { console.log('selected item ' + item) }}
+                onItemSelect={(channel) => {
+                  this.setState({ selected_channel: channel });
+                }}
                 tagRenderer={item => item}
               />
+              <span>{ this.state.selected_channel }</span>
             </div>
             <div>
               <label for="identity">Identity:</label>
-              <MultiSelect items={[1, 2, 3, 4, 5, 6, 'ghjgh']}
-                placeholder="Identity"
+              <MultiSelect items={this.state.active_identifiers_list}
+                placeholder="Choose"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -121,9 +172,12 @@ class App extends React.Component {
                     active={modifiers.active}
                   />
                 }
-                onItemSelect={(item) => { console.log('selected item ' + item) }}
+                onItemSelect={(identifier) => {
+                  this.setState({ selected_identifier: identifier });
+                }}
                 tagRenderer={item => item}
               />
+              <span>{ this.state.selected_identifier }</span>
             </div>
           </div>
           <div className="KnowledgeBase bordered-section marginalized">
