@@ -1,15 +1,16 @@
 import "@blueprintjs/core/lib/css/blueprint.css";
 import './Theme.css';
+import './BlueprintjsOverrides.css';
 import './App.css';
 import './Navbar.css';
 
 import React from 'react';
-import { MenuItem, Spinner, SpinnerSize } from "@blueprintjs/core";
+import { Button, Callout, MenuItem, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { Tag } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 
-// var RETORT_URL = 'https://retort-v2.herokuapp.com';
-var RETORT_URL = 'http://localhost:3000';
+var RETORT_URL = 'https://retort-v2.herokuapp.com';
+// var RETORT_URL = 'http://localhost:3000';
 
 class App extends React.Component {
 
@@ -21,6 +22,8 @@ class App extends React.Component {
       loading_knowledge_base:    false,
       loading_inference_engine:  false,
       loading_process_selector:  false,
+      loading_visualizer_words:  false,
+      initializing_visualizer:   false,
 
       active_mediums_list:     [],
       active_channels_list:    [],
@@ -28,7 +31,15 @@ class App extends React.Component {
 
       selected_medium:     "",
       selected_channel:    "",
-      selected_identifier: ""
+      selected_identifier: "",
+
+      // list_of_word_lists:    [
+      //   ["There", "Once", "When"],
+      //   ["there", "was", "while", "upon"]
+      // ],
+      // selected_word_in_list: [1, 3]
+      list_of_word_lists:    [],
+      selected_word_in_list: []
     }
     console.log('loading');
   }
@@ -88,6 +99,44 @@ class App extends React.Component {
       }));
   }
 
+  initialize_visualizer() {
+    this.setState({ 
+      initializing_visualizer: true,
+      list_of_word_lists:      [],
+      selected_word_in_list:   []
+    });
+
+    // get opening words
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(
+      RETORT_URL + '/bigram/openings' + this.identity_params_as_url_string(),
+      requestOptions
+    )
+      .then(response => response.json())
+      .then((list) => this.setState({
+        initializing_visualizer: false,
+        list_of_word_lists: [list.map((json) => { return json.after })]
+      }));
+  }
+
+  identity_params_as_url_string() {
+    var identity_params = '?';
+    if (this.state.selected_medium.length > 0) {
+      identity_params += '&medium=' + this.selected_medium;
+    }
+    if (this.state.selected_channel.length > 0) {
+      identity_params += '&channel=' + this.selected_channel;
+    }
+    if (this.state.selected_identifier.length > 0) {
+      identity_params += '&identifier=' + this.selected_identifier;
+    }
+    
+    return identity_params;
+  }
+
   render() {
     return (
       <div className="App">
@@ -119,11 +168,19 @@ class App extends React.Component {
               )}
             </div>
             <img src="https://i.imgur.com/Fv6NiyJ.png" className="avatar" />
-            <div>
-              <label for="medium">Medium:</label>
+
+            <Callout>
+              Start by selecting a medium to mimic. You can then select either a channel or identity
+              from that medium to further specialize your text generation.
+            </Callout>
+
+            <div style={{marginTop: '0.5em'}}>
+              <label htmlFor="medium">1.&nbsp; Medium</label>
               <MultiSelect
                 items={this.state.active_mediums_list}
-                placeholder="Choose"
+                selectedItems={[this.state.selected_medium]}
+                placeholder="Select one"
+                className="bp3-dark"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -133,18 +190,25 @@ class App extends React.Component {
                   />
                 }
                 onItemSelect={(medium) => {
-                  this.setState({ selected_medium: medium });
+                  this.setState({
+                    selected_medium:     medium,
+                    selected_channel:    null,
+                    selected_identifier: null
+                  });
                   this.load_channels(medium);
                   this.load_identities(medium);
                 }}
+                noResults={<MenuItem disabled={true} text="Loading available mediums..." />}
                 tagRenderer={item => item}
               />
-              <span>{ this.state.selected_medium }</span>
             </div>
-            <div>
-              <label for="channel">Channel:</label>
-              <MultiSelect items={this.state.active_channels_list}
-                placeholder="Choose"
+            <div style={{marginTop: '0.5em'}}>
+              <label htmlFor="channel">2a. Channel</label>
+              <MultiSelect 
+                items={this.state.active_channels_list}
+                selectedItems={[this.state.selected_channel]}
+                placeholder="Select one"
+                className="bp3-dark"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -153,17 +217,20 @@ class App extends React.Component {
                     active={modifiers.active}
                   />
                 }
+                noResults={<MenuItem disabled={true} text="No channels available for this medium." />}
                 onItemSelect={(channel) => {
                   this.setState({ selected_channel: channel });
                 }}
                 tagRenderer={item => item}
               />
-              <span>{ this.state.selected_channel }</span>
             </div>
-            <div>
-              <label for="identity">Identity:</label>
-              <MultiSelect items={this.state.active_identifiers_list}
-                placeholder="Choose"
+            <div style={{marginTop: '0.5em'}}>
+              <label htmlFor="identity">2b. Identity</label>
+              <MultiSelect
+                items={this.state.active_identifiers_list}
+                selectedItems={[this.state.selected_identifier]}
+                placeholder="Select one"
+                className="bp3-dark"
                 itemRenderer={(item, { modifiers, handleClick }) =>
                   <MenuItem
                     key={item}
@@ -172,12 +239,12 @@ class App extends React.Component {
                     active={modifiers.active}
                   />
                 }
+                noResults={<MenuItem disabled={true} text="No identities available for this medium." />}
                 onItemSelect={(identifier) => {
                   this.setState({ selected_identifier: identifier });
                 }}
                 tagRenderer={item => item}
               />
-              <span>{ this.state.selected_identifier }</span>
             </div>
           </div>
           <div className="KnowledgeBase bordered-section marginalized">
@@ -220,43 +287,49 @@ class App extends React.Component {
 
         <div className="Visualizer muted-section padded-section marginalized">
           <div className="muted-section-title">
-            Visualizer &#8674; Medium &#8674; Channel / Identity
+            Visualizer 
+            &nbsp; &#8674; &nbsp;
+            { this.state.selected_medium || 'Medium' } 
+            &nbsp; &#8674; &nbsp;
+            { this.state.selected_channel || 'Channel' } 
+            &nbsp; / &nbsp;
+            { this.state.selected_identifier || 'Identity' }
           </div>
+
           <div className="DialogueTreeVisualizer">
-            <ul className="WordList">
-              <li>There</li>
-              <li>The</li>
-              <li>In</li>
-              <li className="selected">Once</li>
-              <li>It</li>
-              <li>When</li>
-              <li>While</li>
-            </ul>
-            <ul className="WordList">
-              <li>there</li>
-              <li>he</li>
-              <li className="selected">upon</li>
-              <li>It</li>
-              <li>When</li>
-              <li>While</li>
-            </ul>
-            <ul className="WordList">
-              <li>there</li>
-              <li>he</li>
-              <li>When</li>
-              <li>While</li>
-              <li className="selected">a</li>
-              <li>It</li>
-            </ul>
-            <ul className="WordList">
-              <li>time</li>
-              <li>midnight</li>
-              <li>dreary</li>
-              <li>late</li>
-              <li>monday</li>
-              <li>wednesday</li>
-              <li>friday</li>
-            </ul>
+            {this.state.list_of_word_lists.length == 0 && (
+              <Button
+                className="bp3-dark"
+                fill={true}
+                outlined={true}
+                minimal={true}
+                loading={this.state.initializing_visualizer}
+                intent="primary"
+                onClick={() => { this.initialize_visualizer(); }}
+              >
+                Start a chain
+              </Button>
+            )}
+
+            {this.state.list_of_word_lists.map((word_list, i) => {
+              return (
+                <ul className="WordList">
+                  {word_list.map((word, j) => {
+                    var word_class = (this.state.selected_word_in_list[i] == j)
+                      ? 'selected' 
+                      : '';
+                    return(
+                      <li className={word_class}>
+                        { word }
+                      </li>
+                    )
+                  })}
+                </ul>
+              )
+            })}
+            { this.state.loading_visualizer_words && (
+              <Spinner size={SpinnerSize.LARGE} />
+            )}
           </div>
         </div>
       </div>
