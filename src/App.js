@@ -39,7 +39,9 @@ class App extends React.Component {
       // ],
       // selected_word_in_list: [1, 3]
       list_of_word_lists:    [],
-      selected_word_in_list: []
+      selected_word_in_list: [],
+
+      cached_word_selections: []
     }
     console.log('loading');
   }
@@ -112,7 +114,7 @@ class App extends React.Component {
       headers: { 'Content-Type': 'application/json' },
     };
     fetch(
-      RETORT_URL + '/bigram/openings' + this.identity_params_as_url_string(),
+      RETORT_URL + '/bigram/openings?' + this.identity_params_as_url_string(),
       requestOptions
     )
       .then(response => response.json())
@@ -123,18 +125,46 @@ class App extends React.Component {
   }
 
   identity_params_as_url_string() {
-    var identity_params = '?';
+    var identity_params = '';
     if (this.state.selected_medium.length > 0) {
-      identity_params += '&medium=' + this.selected_medium;
+      identity_params += '&medium=' + encodeURIComponent(this.state.selected_medium);
     }
     if (this.state.selected_channel.length > 0) {
-      identity_params += '&channel=' + this.selected_channel;
+      identity_params += '&channel=' + encodeURIComponent(this.state.selected_channel);
     }
     if (this.state.selected_identifier.length > 0) {
-      identity_params += '&identifier=' + this.selected_identifier;
+      identity_params += '&identifier=' + encodeURIComponent(this.state.selected_identifier);
     }
     
     return identity_params;
+  }
+
+  select_chain_word(list_index, word_index, word) {
+    var word_selections = this.state.selected_word_in_list;
+    word_selections[list_index] = word_index;
+
+    this.setState({
+      list_of_word_lists:       this.state.list_of_word_lists.slice(0, list_index + 1),
+      selected_word_in_list:    word_selections,
+      loading_visualizer_words: true,
+      cached_word_selections:   this.state.cached_word_selections.slice(0, list_index).concat(word)
+    });
+
+    // Load next word list
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(
+      RETORT_URL + '/bigram/consequents?prior=' + word.toLowerCase() + this.identity_params_as_url_string(),
+      requestOptions
+    )
+      .then(response => response.json())
+      .then((list) => this.setState({
+        initializing_visualizer:  false,
+        loading_visualizer_words: false,
+        list_of_word_lists:       this.state.list_of_word_lists.slice(0, list_index + 1).concat([list])
+      }));
   }
 
   render() {
@@ -192,8 +222,8 @@ class App extends React.Component {
                 onItemSelect={(medium) => {
                   this.setState({
                     selected_medium:     medium,
-                    selected_channel:    null,
-                    selected_identifier: null
+                    selected_channel:    '',
+                    selected_identifier: ''
                   });
                   this.load_channels(medium);
                   this.load_identities(medium);
@@ -268,7 +298,7 @@ class App extends React.Component {
                 <Spinner intent="success" size={SpinnerSize.SMALL} className='float-right' />
               )}
             </div>
-            Chain length, style filter, autopunct, etc
+            Chain length, variance/options slider, style filter, autopunct, etc
           </div>
           <div className="ProcessSelector bordered-section marginalized">
             <div className="section-title">
@@ -282,7 +312,7 @@ class App extends React.Component {
         </div>
 
         <div className="Output highlighted-section padded-section marginalized">
-          Output
+          { this.state.cached_word_selections.join(' ')}
         </div>
 
         <div className="Visualizer muted-section padded-section marginalized">
@@ -313,13 +343,19 @@ class App extends React.Component {
 
             {this.state.list_of_word_lists.map((word_list, i) => {
               return (
-                <ul className="WordList">
+                <ul className="WordList" key={i}>
                   {word_list.map((word, j) => {
                     var word_class = (this.state.selected_word_in_list[i] == j)
                       ? 'selected' 
                       : '';
                     return(
-                      <li className={word_class}>
+                      <li
+                        className={word_class}
+                        key={j}
+                        onClick={() => {
+                          this.select_chain_word(i, j, word);
+                        }}
+                      >
                         { word }
                       </li>
                     )
