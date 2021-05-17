@@ -149,6 +149,7 @@ class App extends React.Component {
       loading_visualizer_words: true,
       cached_word_selections:   this.state.cached_word_selections.slice(0, list_index).concat(word)
     });
+    document.getElementsByClassName('DialogueTreeVisualizer')[0].scrollLeft += 500;
 
     // Load next word list
     const requestOptions = {
@@ -160,11 +161,14 @@ class App extends React.Component {
       requestOptions
     )
       .then(response => response.json())
-      .then((list) => this.setState({
-        initializing_visualizer:  false,
-        loading_visualizer_words: false,
-        list_of_word_lists:       this.state.list_of_word_lists.slice(0, list_index + 1).concat([list])
-      }));
+      .then((list) => {
+        this.setState({
+          initializing_visualizer:  false,
+          loading_visualizer_words: false,
+          list_of_word_lists:       this.state.list_of_word_lists.slice(0, list_index + 1).concat([list])
+        });
+        document.getElementsByClassName('DialogueTreeVisualizer')[0].scrollLeft += 500;
+      });
   }
 
   render() {

@@ -61,6 +61,7 @@
   height: 100%;
   padding-top: 1em;
   padding-bottom: 1em;
+  scroll-behavior: smooth;
 
   overflow-y: hidden;
   overflow-x: auto;
